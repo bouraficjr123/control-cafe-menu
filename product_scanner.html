@@ -1,0 +1,1173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Control Cafe - Product Scanner System</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #3498db;
+            --secondary-color: #2c3e50;
+            --success-color: #27ae60;
+            --danger-color: #e74c3c;
+            --light-color: #ecf0f1;
+            --dark-color: #34495e;
+            --cafe-color: #8B4513;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f8f9fa;
+            padding-top: 20px;
+            padding-bottom: 50px;
+        }
+        
+        /* Logo and Header Styles */
+        .logo-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .logo {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: var(--cafe-color);
+            text-align: center;
+            margin-bottom: 10px;
+        }
+        
+        .logo-icon {
+            font-size: 2.8rem;
+            color: var(--cafe-color);
+            margin-right: 15px;
+        }
+        
+        .logo-text {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .logo-main {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--cafe-color);
+            letter-spacing: 1px;
+        }
+        
+        .logo-subtitle {
+            font-size: 1rem;
+            color: #666;
+            font-weight: 500;
+            margin-top: -5px;
+        }
+        
+        .navbar-brand {
+            font-weight: bold;
+            color: var(--primary-color) !important;
+        }
+        
+        .card {
+            border: none;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+            transition: transform 0.3s;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .card-header {
+            background-color: var(--primary-color);
+            color: white;
+            border-radius: 10px 10px 0 0 !important;
+            padding: 15px 20px;
+            font-weight: 600;
+        }
+        
+        .btn-primary {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+        }
+        
+        .btn-primary:hover {
+            background-color: #2980b9;
+            border-color: #2980b9;
+        }
+        
+        .btn-success {
+            background-color: var(--success-color);
+            border-color: var(--success-color);
+        }
+        
+        .btn-danger {
+            background-color: var(--danger-color);
+            border-color: var(--danger-color);
+        }
+        
+        .scanner-area {
+            background-color: #2c3e50;
+            color: white;
+            padding: 30px;
+            border-radius: 10px;
+            text-align: center;
+        }
+        
+        .scanner-icon {
+            font-size: 5rem;
+            margin-bottom: 20px;
+            color: #3498db;
+        }
+        
+        .scanner-input {
+            font-size: 2rem;
+            height: 60px;
+            text-align: center;
+            font-weight: bold;
+            letter-spacing: 5px;
+        }
+        
+        .product-item {
+            border-left: 5px solid var(--primary-color);
+            padding-left: 15px;
+            margin-bottom: 15px;
+            transition: all 0.3s;
+        }
+        
+        .product-item:hover {
+            background-color: #f8f9fa;
+        }
+        
+        .cart-item {
+            padding: 10px 0;
+            border-bottom: 1px dashed #ddd;
+        }
+        
+        .total-price {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--success-color);
+        }
+        
+        .price-badge {
+            background-color: var(--success-color);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-weight: bold;
+        }
+        
+        .product-id {
+            font-family: monospace;
+            background-color: #f8f9fa;
+            padding: 3px 8px;
+            border-radius: 4px;
+            color: var(--dark-color);
+        }
+        
+        .tab-content {
+            padding: 20px 0;
+        }
+        
+        .barcode-display {
+            font-family: 'Libre Barcode 39', cursive;
+            font-size: 3rem;
+            text-align: center;
+            margin: 20px 0;
+            color: var(--dark-color);
+        }
+        
+        .cafe-theme-btn {
+            background-color: var(--cafe-color);
+            border-color: var(--cafe-color);
+            color: white;
+        }
+        
+        .cafe-theme-btn:hover {
+            background-color: #6b3510;
+            border-color: #6b3510;
+            color: white;
+        }
+        
+        @media (max-width: 768px) {
+            .logo-main {
+                font-size: 2rem;
+            }
+            
+            .logo-icon {
+                font-size: 2.2rem;
+                margin-right: 10px;
+            }
+            
+            .scanner-input {
+                font-size: 1.5rem;
+                height: 50px;
+            }
+            
+            .barcode-display {
+                font-size: 2.5rem;
+            }
+        }
+        
+        footer {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            background-color: var(--secondary-color);
+            color: white;
+            padding: 10px 0;
+            text-align: center;
+        }
+        
+        .footer-logo {
+            color: var(--cafe-color);
+            font-weight: bold;
+        }
+    </style>
+    <!-- Google Font for barcode display -->
+    <link href="https://fonts.googleapis.com/css2?family=Libre+Barcode+39&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <!-- Header with Logo -->
+        <header class="mb-4">
+            <div class="logo-container">
+                <div class="logo-text">
+                    <div class="d-flex align-items-center">
+                        <i class="fas fa-mug-hot logo-icon"></i>
+                        <div>
+                            <div class="logo-main">Control Cafe</div>
+                            <div class="logo-subtitle">Product Scanner System</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- You can also use an image logo by uncommenting the code below -->
+            <!--
+            <div class="text-center mb-3">
+                <div class="d-inline-block p-3 rounded" style="background-color: #8B4513;">
+                    <h1 class="text-white mb-0">Control Cafe</h1>
+                    <p class="text-light mb-0">Product Scanner System</p>
+                </div>
+            </div>
+            -->
+            
+            <p class="text-center text-muted">Manage products, scan items, and process purchases</p>
+        </header>
+        
+        <!-- Navigation Tabs -->
+        <ul class="nav nav-tabs" id="myTab" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="buy-tab" data-bs-toggle="tab" data-bs-target="#buy" type="button" role="tab">
+                    <i class="fas fa-cash-register me-1"></i> Buy Products
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="add-tab" data-bs-toggle="tab" data-bs-target="#add" type="button" role="tab">
+                    <i class="fas fa-plus-circle me-1"></i> Add Products
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="menu-tab" data-bs-toggle="tab" data-bs-target="#menu" type="button" role="tab">
+                    <i class="fas fa-list me-1"></i> Product Menu
+                </button>
+            </li>
+        </ul>
+        
+        <!-- Tab Content -->
+        <div class="tab-content" id="myTabContent">
+            <!-- Buy Products Tab -->
+            <div class="tab-pane fade show active" id="buy" role="tabpanel">
+                <div class="row">
+                    <!-- Scanner Section -->
+                    <div class="col-lg-6">
+                        <div class="card">
+                            <div class="card-header">
+                                <i class="fas fa-barcode me-2"></i> Product Scanner
+                            </div>
+                            <div class="card-body">
+                                <div class="scanner-area mb-4">
+                                    <div class="scanner-icon">
+                                        <i class="fas fa-camera"></i>
+                                    </div>
+                                    <p class="mb-3">Scan barcode or enter product ID manually</p>
+                                    <div class="input-group mb-3">
+                                        <input type="text" class="form-control scanner-input" id="productScanner" placeholder="SCAN OR ENTER ID">
+                                        <button class="btn cafe-theme-btn" type="button" id="scanBtn">
+                                            <i class="fas fa-search"></i> Lookup
+                                        </button>
+                                    </div>
+                                    <div class="barcode-display" id="barcodeDisplay">*12345*</div>
+                                    <button class="btn btn-success mt-2" id="addToCartBtn">
+                                        <i class="fas fa-cart-plus me-2"></i> Add to Cart
+                                    </button>
+                                </div>
+                                
+                                <div class="row">
+                                    <div class="col-12">
+                                        <h5>Quick ID Entry</h5>
+                                        <div class="d-flex flex-wrap" id="quickIdButtons">
+                                            <!-- Quick ID buttons will be generated here -->
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Shopping Cart Section -->
+                    <div class="col-lg-6">
+                        <div class="card">
+                            <div class="card-header">
+                                <i class="fas fa-shopping-cart me-2"></i> Shopping Cart
+                            </div>
+                            <div class="card-body">
+                                <div id="cartItems">
+                                    <!-- Cart items will be displayed here -->
+                                    <div class="text-center text-muted py-4">
+                                        <i class="fas fa-shopping-cart fa-3x mb-3"></i>
+                                        <p>Your cart is empty</p>
+                                        <p>Scan or enter a product ID to add items</p>
+                                    </div>
+                                </div>
+                                
+                                <div class="d-flex justify-content-between align-items-center mt-4 pt-3 border-top">
+                                    <h5>Total:</h5>
+                                    <div class="total-price" id="cartTotal">$0.00</div>
+                                </div>
+                                
+                                <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-4">
+                                    <button class="btn btn-danger me-md-2" id="clearCartBtn">
+                                        <i class="fas fa-trash me-2"></i> Clear Cart
+                                    </button>
+                                    <button class="btn btn-success" id="checkoutBtn">
+                                        <i class="fas fa-credit-card me-2"></i> Checkout
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Recent Scans -->
+                        <div class="card mt-4">
+                            <div class="card-header">
+                                <i class="fas fa-history me-2"></i> Recent Scans
+                            </div>
+                            <div class="card-body">
+                                <ul class="list-group list-group-flush" id="recentScans">
+                                    <!-- Recent scans will appear here -->
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Add Products Tab -->
+            <div class="tab-pane fade" id="add" role="tabpanel">
+                <div class="row">
+                    <div class="col-lg-6">
+                        <div class="card">
+                            <div class="card-header">
+                                <i class="fas fa-plus-circle me-2"></i> Add New Product
+                            </div>
+                            <div class="card-body">
+                                <form id="addProductForm">
+                                    <div class="mb-3">
+                                        <label for="productName" class="form-label">Product Name</label>
+                                        <input type="text" class="form-control" id="productName" required>
+                                    </div>
+                                    
+                                    <div class="row mb-3">
+                                        <div class="col-md-6">
+                                            <label for="productPrice" class="form-label">Price ($)</label>
+                                            <input type="number" class="form-control" id="productPrice" min="0" step="0.01" required>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label for="productId" class="form-label">Product ID</label>
+                                            <div class="input-group">
+                                                <input type="text" class="form-control" id="productId" required>
+                                                <button class="btn btn-outline-secondary" type="button" id="generateIdBtn">
+                                                    <i class="fas fa-random"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="mb-3">
+                                        <label for="productCategory" class="form-label">Category</label>
+                                        <select class="form-select" id="productCategory" required>
+                                            <option value="Coffee">Coffee</option>
+                                            <option value="Tea">Tea</option>
+                                            <option value="Pastries">Pastries</option>
+                                            <option value="Sandwiches">Sandwiches</option>
+                                            <option value="Snacks">Snacks</option>
+                                            <option value="Other">Other</option>
+                                        </select>
+                                    </div>
+                                    
+                                    <div class="mb-3">
+                                        <label for="productDescription" class="form-label">Description</label>
+                                        <textarea class="form-control" id="productDescription" rows="3"></textarea>
+                                    </div>
+                                    
+                                    <button type="submit" class="btn cafe-theme-btn">
+                                        <i class="fas fa-save me-2"></i> Add Product
+                                    </button>
+                                    <button type="reset" class="btn btn-outline-secondary">
+                                        <i class="fas fa-undo me-2"></i> Reset
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-lg-6">
+                        <div class="card">
+                            <div class="card-header">
+                                <i class="fas fa-info-circle me-2"></i> Instructions
+                            </div>
+                            <div class="card-body">
+                                <h5>How to add products:</h5>
+                                <ol class="mt-3">
+                                    <li>Fill in all required fields (name, price, ID)</li>
+                                    <li>Product ID can be manually entered or auto-generated</li>
+                                    <li>Select a category to organize your products</li>
+                                    <li>Add an optional description for more details</li>
+                                    <li>Click "Add Product" to save to the system</li>
+                                </ol>
+                                <div class="alert alert-info mt-3">
+                                    <i class="fas fa-lightbulb me-2"></i>
+                                    <strong>Tip:</strong> Use simple, unique IDs for easy scanning. For example: "COF001" for coffee, "TEA001" for tea.
+                                </div>
+                                <div class="alert cafe-theme-btn text-white mt-3">
+                                    <i class="fas fa-coffee me-2"></i>
+                                    <strong>Cafe Tip:</strong> Add cafe-specific categories like Coffee, Tea, Pastries for better organization.
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Recently Added Products -->
+                        <div class="card mt-4">
+                            <div class="card-header">
+                                <i class="fas fa-clock me-2"></i> Recently Added
+                            </div>
+                            <div class="card-body">
+                                <div id="recentlyAdded">
+                                    <!-- Recently added products will appear here -->
+                                    <p class="text-muted text-center">No products added yet</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Product Menu Tab -->
+            <div class="tab-pane fade" id="menu" role="tabpanel">
+                <div class="card">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <div>
+                            <i class="fas fa-list me-2"></i> Product Menu
+                        </div>
+                        <div>
+                            <button class="btn btn-sm cafe-theme-btn" id="refreshMenuBtn">
+                                <i class="fas fa-sync-alt me-1"></i> Refresh
+                            </button>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <input type="text" class="form-control" id="searchProduct" placeholder="Search products...">
+                            </div>
+                            <div class="col-md-6">
+                                <select class="form-select" id="filterCategory">
+                                    <option value="">All Categories</option>
+                                    <option value="Coffee">Coffee</option>
+                                    <option value="Tea">Tea</option>
+                                    <option value="Pastries">Pastries</option>
+                                    <option value="Sandwiches">Sandwiches</option>
+                                    <option value="Snacks">Snacks</option>
+                                    <option value="Other">Other</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead class="table-dark">
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Product Name</th>
+                                        <th>Category</th>
+                                        <th>Price</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="productMenuTable">
+                                    <!-- Product rows will be generated here -->
+                                </tbody>
+                            </table>
+                        </div>
+                        
+                        <div class="text-center mt-3" id="noProductsMessage">
+                            <p class="text-muted">No products found. Add products in the "Add Products" tab.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <p class="mb-0"><span class="footer-logo">Control Cafe</span> Product Scanner System &copy; 2023</p>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        // Sample product data for a cafe
+        let products = [
+            {id: "COF001", name: "Espresso", price: 3.50, category: "Coffee", description: "Strong black coffee"},
+            {id: "COF002", name: "Cappuccino", price: 4.50, category: "Coffee", description: "Espresso with steamed milk foam"},
+            {id: "TEA001", name: "Green Tea", price: 2.50, category: "Tea", description: "Fresh green tea leaves"},
+            {id: "PAS001", name: "Croissant", price: 3.00, category: "Pastries", description: "Buttery French croissant"},
+            {id: "SAN001", name: "Club Sandwich", price: 8.99, category: "Sandwiches", description: "Triple-decker sandwich"}
+        ];
+        
+        let cart = [];
+        let recentScans = [];
+        
+        // DOM elements
+        const productScanner = document.getElementById('productScanner');
+        const scanBtn = document.getElementById('scanBtn');
+        const addToCartBtn = document.getElementById('addToCartBtn');
+        const quickIdButtons = document.getElementById('quickIdButtons');
+        const cartItems = document.getElementById('cartItems');
+        const cartTotal = document.getElementById('cartTotal');
+        const clearCartBtn = document.getElementById('clearCartBtn');
+        const checkoutBtn = document.getElementById('checkoutBtn');
+        const recentScansList = document.getElementById('recentScans');
+        const addProductForm = document.getElementById('addProductForm');
+        const generateIdBtn = document.getElementById('generateIdBtn');
+        const recentlyAdded = document.getElementById('recentlyAdded');
+        const refreshMenuBtn = document.getElementById('refreshMenuBtn');
+        const productMenuTable = document.getElementById('productMenuTable');
+        const searchProduct = document.getElementById('searchProduct');
+        const filterCategory = document.getElementById('filterCategory');
+        const barcodeDisplay = document.getElementById('barcodeDisplay');
+        const noProductsMessage = document.getElementById('noProductsMessage');
+        
+        // Initialize the system
+        document.addEventListener('DOMContentLoaded', function() {
+            // Load products from localStorage if available
+            const savedProducts = localStorage.getItem('products');
+            if (savedProducts) {
+                products = JSON.parse(savedProducts);
+            }
+            
+            // Load cart from localStorage if available
+            const savedCart = localStorage.getItem('cart');
+            if (savedCart) {
+                cart = JSON.parse(savedCart);
+                updateCartDisplay();
+            }
+            
+            // Load recent scans from localStorage if available
+            const savedScans = localStorage.getItem('recentScans');
+            if (savedScans) {
+                recentScans = JSON.parse(savedScans);
+                updateRecentScans();
+            }
+            
+            // Generate quick ID buttons
+            generateQuickIdButtons();
+            
+            // Update product menu
+            updateProductMenu();
+            
+            // Set up event listeners
+            setupEventListeners();
+        });
+        
+        // Set up event listeners
+        function setupEventListeners() {
+            // Scanner functionality
+            scanBtn.addEventListener('click', handleScan);
+            productScanner.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    handleScan();
+                }
+            });
+            
+            // Add to cart button
+            addToCartBtn.addEventListener('click', function() {
+                const productId = productScanner.value.trim();
+                if (productId) {
+                    addToCart(productId);
+                }
+            });
+            
+            // Clear cart button
+            clearCartBtn.addEventListener('click', clearCart);
+            
+            // Checkout button
+            checkoutBtn.addEventListener('click', checkout);
+            
+            // Add product form
+            addProductForm.addEventListener('submit', addProduct);
+            
+            // Generate ID button
+            generateIdBtn.addEventListener('click', generateProductId);
+            
+            // Refresh menu button
+            refreshMenuBtn.addEventListener('click', updateProductMenu);
+            
+            // Search and filter
+            searchProduct.addEventListener('input', updateProductMenu);
+            filterCategory.addEventListener('change', updateProductMenu);
+            
+            // Update barcode display as user types
+            productScanner.addEventListener('input', function() {
+                barcodeDisplay.textContent = `*${this.value}*`;
+            });
+        }
+        
+        // Handle product scan/lookup
+        function handleScan() {
+            const productId = productScanner.value.trim();
+            if (!productId) {
+                alert("Please enter a product ID");
+                return;
+            }
+            
+            const product = findProductById(productId);
+            if (product) {
+                // Show product found message
+                showMessage(`Found: ${product.name} - $${product.price.toFixed(2)}`, 'success');
+                
+                // Add to recent scans
+                addToRecentScans(productId);
+                
+                // Update barcode display
+                barcodeDisplay.textContent = `*${productId}*`;
+            } else {
+                showMessage(`Product with ID "${productId}" not found`, 'danger');
+                barcodeDisplay.textContent = "*NOT FOUND*";
+            }
+        }
+        
+        // Add product to cart
+        function addToCart(productId) {
+            const product = findProductById(productId);
+            if (!product) {
+                showMessage(`Product with ID "${productId}" not found`, 'danger');
+                return;
+            }
+            
+            // Check if product already in cart
+            const existingItem = cart.find(item => item.id === productId);
+            if (existingItem) {
+                existingItem.quantity += 1;
+            } else {
+                cart.push({
+                    id: product.id,
+                    name: product.name,
+                    price: product.price,
+                    quantity: 1
+                });
+            }
+            
+            // Update cart display and save to localStorage
+            updateCartDisplay();
+            saveCart();
+            
+            // Add to recent scans
+            addToRecentScans(productId);
+            
+            // Show success message
+            showMessage(`Added ${product.name} to cart`, 'success');
+            
+            // Clear scanner input
+            productScanner.value = '';
+            barcodeDisplay.textContent = '*12345*';
+            
+            // Focus back on scanner for next item
+            productScanner.focus();
+        }
+        
+        // Update cart display
+        function updateCartDisplay() {
+            if (cart.length === 0) {
+                cartItems.innerHTML = `
+                    <div class="text-center text-muted py-4">
+                        <i class="fas fa-shopping-cart fa-3x mb-3"></i>
+                        <p>Your cart is empty</p>
+                        <p>Scan or enter a product ID to add items</p>
+                    </div>
+                `;
+                cartTotal.textContent = '$0.00';
+                return;
+            }
+            
+            let cartHtml = '';
+            let total = 0;
+            
+            cart.forEach(item => {
+                const itemTotal = item.price * item.quantity;
+                total += itemTotal;
+                
+                cartHtml += `
+                    <div class="cart-item">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <h6 class="mb-1">${item.name}</h6>
+                                <small class="text-muted">ID: <span class="product-id">${item.id}</span></small>
+                            </div>
+                            <div class="text-end">
+                                <div class="d-flex align-items-center">
+                                    <button class="btn btn-sm btn-outline-secondary me-2 decrease-quantity" data-id="${item.id}">-</button>
+                                    <span class="me-2">${item.quantity}</span>
+                                    <button class="btn btn-sm btn-outline-secondary me-3 increase-quantity" data-id="${item.id}">+</button>
+                                </div>
+                                <div>$${itemTotal.toFixed(2)}</div>
+                                <small class="text-muted">$${item.price.toFixed(2)} each</small>
+                            </div>
+                        </div>
+                        <div class="text-end mt-1">
+                            <button class="btn btn-sm btn-outline-danger remove-item" data-id="${item.id}">
+                                <i class="fas fa-trash-alt me-1"></i> Remove
+                            </button>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            cartItems.innerHTML = cartHtml;
+            cartTotal.textContent = `$${total.toFixed(2)}`;
+            
+            // Add event listeners to cart buttons
+            document.querySelectorAll('.decrease-quantity').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    updateQuantity(this.getAttribute('data-id'), -1);
+                });
+            });
+            
+            document.querySelectorAll('.increase-quantity').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    updateQuantity(this.getAttribute('data-id'), 1);
+                });
+            });
+            
+            document.querySelectorAll('.remove-item').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    removeFromCart(this.getAttribute('data-id'));
+                });
+            });
+        }
+        
+        // Update item quantity in cart
+        function updateQuantity(productId, change) {
+            const item = cart.find(item => item.id === productId);
+            if (!item) return;
+            
+            item.quantity += change;
+            
+            if (item.quantity <= 0) {
+                cart = cart.filter(item => item.id !== productId);
+            }
+            
+            updateCartDisplay();
+            saveCart();
+        }
+        
+        // Remove item from cart
+        function removeFromCart(productId) {
+            cart = cart.filter(item => item.id !== productId);
+            updateCartDisplay();
+            saveCart();
+            showMessage('Item removed from cart', 'info');
+        }
+        
+        // Clear cart
+        function clearCart() {
+            if (cart.length === 0) {
+                showMessage('Cart is already empty', 'info');
+                return;
+            }
+            
+            if (confirm('Are you sure you want to clear the cart?')) {
+                cart = [];
+                updateCartDisplay();
+                saveCart();
+                showMessage('Cart cleared', 'info');
+            }
+        }
+        
+        // Checkout
+        function checkout() {
+            if (cart.length === 0) {
+                showMessage('Cannot checkout with empty cart', 'danger');
+                return;
+            }
+            
+            const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            
+            alert(`Checkout completed!\nTotal: $${total.toFixed(2)}\nThank you for your purchase at Control Cafe!`);
+            
+            // Clear cart after checkout
+            cart = [];
+            updateCartDisplay();
+            saveCart();
+        }
+        
+        // Add to recent scans
+        function addToRecentScans(productId) {
+            const product = findProductById(productId);
+            if (!product) return;
+            
+            // Remove if already in recent scans
+            recentScans = recentScans.filter(scan => scan.id !== productId);
+            
+            // Add to beginning
+            recentScans.unshift({
+                id: product.id,
+                name: product.name,
+                timestamp: new Date().toLocaleTimeString()
+            });
+            
+            // Keep only last 5 scans
+            if (recentScans.length > 5) {
+                recentScans.pop();
+            }
+            
+            updateRecentScans();
+            saveRecentScans();
+        }
+        
+        // Update recent scans display
+        function updateRecentScans() {
+            if (recentScans.length === 0) {
+                recentScansList.innerHTML = '<li class="list-group-item text-center text-muted">No recent scans</li>';
+                return;
+            }
+            
+            let html = '';
+            recentScans.forEach(scan => {
+                html += `
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <div>
+                            <strong>${scan.name}</strong><br>
+                            <small class="text-muted">ID: ${scan.id}</small>
+                        </div>
+                        <div class="text-end">
+                            <small class="text-muted">${scan.timestamp}</small><br>
+                            <button class="btn btn-sm btn-outline-primary mt-1 add-from-recent" data-id="${scan.id}">
+                                <i class="fas fa-cart-plus"></i>
+                            </button>
+                        </div>
+                    </li>
+                `;
+            });
+            
+            recentScansList.innerHTML = html;
+            
+            // Add event listeners to recent scan buttons
+            document.querySelectorAll('.add-from-recent').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    addToCart(this.getAttribute('data-id'));
+                });
+            });
+        }
+        
+        // Generate quick ID buttons for common products
+        function generateQuickIdButtons() {
+            let html = '';
+            // Show first 6 products as quick buttons
+            const quickProducts = products.slice(0, 6);
+            
+            quickProducts.forEach(product => {
+                html += `
+                    <button type="button" class="btn btn-outline-primary m-1 quick-id-btn" data-id="${product.id}">
+                        ${product.id}: ${product.name}
+                    </button>
+                `;
+            });
+            
+            quickIdButtons.innerHTML = html;
+            
+            // Add event listeners to quick ID buttons
+            document.querySelectorAll('.quick-id-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const productId = this.getAttribute('data-id');
+                    productScanner.value = productId;
+                    handleScan();
+                });
+            });
+        }
+        
+        // Add new product
+        function addProduct(e) {
+            e.preventDefault();
+            
+            const name = document.getElementById('productName').value.trim();
+            const price = parseFloat(document.getElementById('productPrice').value);
+            const id = document.getElementById('productId').value.trim();
+            const category = document.getElementById('productCategory').value;
+            const description = document.getElementById('productDescription').value.trim();
+            
+            // Validate inputs
+            if (!name || !price || !id || !category) {
+                showMessage('Please fill in all required fields', 'danger');
+                return;
+            }
+            
+            if (price <= 0) {
+                showMessage('Price must be greater than 0', 'danger');
+                return;
+            }
+            
+            // Check if ID already exists
+            if (findProductById(id)) {
+                showMessage(`Product with ID "${id}" already exists`, 'danger');
+                return;
+            }
+            
+            // Add product to array
+            const newProduct = {
+                id: id,
+                name: name,
+                price: price,
+                category: category,
+                description: description
+            };
+            
+            products.push(newProduct);
+            
+            // Save to localStorage
+            saveProducts();
+            
+            // Update product menu
+            updateProductMenu();
+            
+            // Update quick ID buttons
+            generateQuickIdButtons();
+            
+            // Show success message
+            showMessage(`Product "${name}" added successfully`, 'success');
+            
+            // Reset form
+            addProductForm.reset();
+            
+            // Add to recently added display
+            addToRecentlyAdded(newProduct);
+        }
+        
+        // Add to recently added display
+        function addToRecentlyAdded(product) {
+            let html = `
+                <div class="product-item">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="mb-1">${product.name}</h6>
+                            <small class="text-muted">ID: <span class="product-id">${product.id}</span></small>
+                        </div>
+                        <div class="price-badge">
+                            $${product.price.toFixed(2)}
+                        </div>
+                    </div>
+                    <small class="text-muted">${product.category}</small>
+                    ${product.description ? `<p class="mb-0 mt-1 small">${product.description}</p>` : ''}
+                </div>
+            `;
+            
+            // Prepend to recently added
+            const currentContent = recentlyAdded.innerHTML;
+            if (currentContent.includes('No products added yet')) {
+                recentlyAdded.innerHTML = html;
+            } else {
+                recentlyAdded.innerHTML = html + recentlyAdded.innerHTML;
+            }
+            
+            // Keep only last 3 items
+            const items = recentlyAdded.querySelectorAll('.product-item');
+            if (items.length > 3) {
+                items[3].remove();
+            }
+        }
+        
+        // Generate random product ID
+        function generateProductId() {
+            const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+            let id = '';
+            
+            // Generate 3 letters (category code)
+            for (let i = 0; i < 3; i++) {
+                id += chars.charAt(Math.floor(Math.random() * 26));
+            }
+            
+            // Generate 3 numbers
+            for (let i = 0; i < 3; i++) {
+                id += chars.charAt(26 + Math.floor(Math.random() * 10));
+            }
+            
+            document.getElementById('productId').value = id;
+        }
+        
+        // Update product menu table
+        function updateProductMenu() {
+            const searchTerm = searchProduct.value.toLowerCase();
+            const categoryFilter = filterCategory.value;
+            
+            // Filter products
+            let filteredProducts = products;
+            
+            if (searchTerm) {
+                filteredProducts = filteredProducts.filter(product => 
+                    product.name.toLowerCase().includes(searchTerm) || 
+                    product.id.toLowerCase().includes(searchTerm) ||
+                    product.category.toLowerCase().includes(searchTerm)
+                );
+            }
+            
+            if (categoryFilter) {
+                filteredProducts = filteredProducts.filter(product => 
+                    product.category === categoryFilter
+                );
+            }
+            
+            // Generate table rows
+            let html = '';
+            filteredProducts.forEach(product => {
+                html += `
+                    <tr>
+                        <td><span class="product-id">${product.id}</span></td>
+                        <td>
+                            <strong>${product.name}</strong>
+                            ${product.description ? `<br><small class="text-muted">${product.description}</small>` : ''}
+                        </td>
+                        <td>${product.category}</td>
+                        <td>$${product.price.toFixed(2)}</td>
+                        <td>
+                            <button class="btn btn-sm btn-outline-primary add-from-menu" data-id="${product.id}">
+                                <i class="fas fa-cart-plus"></i>
+                            </button>
+                            <button class="btn btn-sm btn-outline-danger delete-product" data-id="${product.id}">
+                                <i class="fas fa-trash-alt"></i>
+                            </button>
+                        </td>
+                    </tr>
+                `;
+            });
+            
+            productMenuTable.innerHTML = html;
+            
+            // Show/hide no products message
+            if (filteredProducts.length === 0) {
+                noProductsMessage.style.display = 'block';
+                productMenuTable.innerHTML = '';
+            } else {
+                noProductsMessage.style.display = 'none';
+            }
+            
+            // Add event listeners to action buttons
+            document.querySelectorAll('.add-from-menu').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    addToCart(this.getAttribute('data-id'));
+                    
+                    // Switch to buy tab
+                    const buyTab = new bootstrap.Tab(document.getElementById('buy-tab'));
+                    buyTab.show();
+                });
+            });
+            
+            document.querySelectorAll('.delete-product').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const productId = this.getAttribute('data-id');
+                    deleteProduct(productId);
+                });
+            });
+        }
+        
+        // Delete product
+        function deleteProduct(productId) {
+            if (!confirm('Are you sure you want to delete this product?')) {
+                return;
+            }
+            
+            // Remove from products array
+            products = products.filter(product => product.id !== productId);
+            
+            // Remove from cart if present
+            cart = cart.filter(item => item.id !== productId);
+            
+            // Save to localStorage
+            saveProducts();
+            saveCart();
+            
+            // Update displays
+            updateProductMenu();
+            updateCartDisplay();
+            generateQuickIdButtons();
+            
+            showMessage('Product deleted', 'info');
+        }
+        
+        // Find product by ID
+        function findProductById(id) {
+            return products.find(product => product.id === id);
+        }
+        
+        // Show message
+        function showMessage(text, type) {
+            // Create alert element
+            const alertDiv = document.createElement('div');
+            alertDiv.className = `alert alert-${type} alert-dismissible fade show`;
+            alertDiv.innerHTML = `
+                ${text}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            `;
+            
+            // Add to page (top of container)
+            const container = document.querySelector('.container');
+            container.insertBefore(alertDiv, container.firstChild);
+            
+            // Auto remove after 3 seconds
+            setTimeout(() => {
+                if (alertDiv.parentNode) {
+                    alertDiv.remove();
+                }
+            }, 3000);
+        }
+        
+        // Save products to localStorage
+        function saveProducts() {
+            localStorage.setItem('products', JSON.stringify(products));
+        }
+        
+        // Save cart to localStorage
+        function saveCart() {
+            localStorage.setItem('cart', JSON.stringify(cart));
+        }
+        
+        // Save recent scans to localStorage
+        function saveRecentScans() {
+            localStorage.setItem('recentScans', JSON.stringify(recentScans));
+        }
+    </script>
+</body>
+</html>
